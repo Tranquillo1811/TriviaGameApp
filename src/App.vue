@@ -4,29 +4,26 @@
 import StartView from "./components/StartView.vue"
 import QuestionView from "./components/QuestionView.vue"
 import ResultView from "./components/ResultView.vue"
-import {reactive, computed}from 'vue'
+import {reactive, ref, computed}from 'vue'
 
-// let app = Vue.createApp({
-//         data: function() {
-//           return {
-//             // isVisible1: true,
-//             // isVisible2: false,
-//             // isVisible3: false,
-//           }
-//         }
-// })
-// app.mount("#app")
+const isVisibleStart = ref(true)
+const isVisible2 = ref(false)
+
+const onToggleVisibilityStart = () => { 
+  console.log("ToggleStartVisibility: " + isVisibleStart)
+  isVisibleStart.value = !isVisibleStart
+}
 
 
 </script>
 
 
 <template>
-<div id="app" v-cloak>
-  <StartView  />
-  <QuestionView  />
-  <ResultView />
-</div>
+  <div id="app">
+    <StartView v-show="isVisibleStart" @toggle-visibilityStart="onToggleVisibilityStart()" />
+    <QuestionView v-show="!isVisibleStart"/>
+    <ResultView v-show="isVisible2"/>
+  </div>
 </template>
 
 <style>
