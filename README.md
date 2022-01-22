@@ -17,6 +17,8 @@ VSCode (recommended)
 # Usage
 `npm start dev`
 
+The Vue component structure is shown in [Trivia_ComponentTree.pdf](./Trivia_ComponentTree.pdf)
+
 # Maintainers
 <https://github.com/Tranquillo1811> 
 
