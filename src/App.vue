@@ -4,15 +4,17 @@
 import StartView from "./components/StartView.vue"
 import QuestionView from "./components/QuestionView.vue"
 import ResultView from "./components/ResultView.vue"
-import {reactive, ref, computed}from 'vue'
+import {reactive,onBeforeMount, ref, computed}from 'vue'
 
 
 const isVisibleStart = ref(true)
 const isVisible2 = ref(false)
+const QuestionType = ref('')
 
 const onToggleVisibilityStart = () => { 
   console.log("ToggleStartVisibility: " + isVisibleStart)
   isVisibleStart.value = !isVisibleStart
+
 }
 
 
@@ -22,7 +24,7 @@ const onToggleVisibilityStart = () => {
 <template>
   <div id="app">
     <StartView v-show="isVisibleStart" @toggle-visibilityStart="onToggleVisibilityStart()" />
-    <QuestionView v-show="!isVisibleStart"/>
+    <QuestionView v-show="!isVisibleStart"  QuestionType="MultipleChoice" />
     <ResultView v-show="isVisible2"/>
   </div>
 </template>
