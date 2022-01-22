@@ -4,7 +4,7 @@ const username = ref('')
 const difficulty = ref('')
 const Qnumber = ref('')
 
-let isVisible1 = ref('true')
+let isVisible1 = reactive('true')
 
 const emit = defineEmits(['toggle-visibility'])
 
@@ -13,7 +13,7 @@ const onSubmit = () => {
 }
 
 
-const props = defineProps({
+let props = defineProps({
     isVisible1:{
       type: Boolean,
       required: true,
@@ -23,7 +23,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div v-show="isVisible1">
+  <div>
   <h2>The is the StartView</h2><br>
   <label>Please type in your Username</label><br>
   <input type="text" placeholder="Type in your username!" v-model="username"><br><br>

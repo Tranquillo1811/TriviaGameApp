@@ -6,13 +6,11 @@ import QuestionView from "./components/QuestionView.vue"
 import ResultView from "./components/ResultView.vue"
 import {reactive, ref, computed}from 'vue'
 
-const isVisible1 = ref('')
-const isVisible2 = ref('false')
-const isVisible3 = ref('false')
+let isVisible1 = ref('')
+let isVisible2 = ref('false')
 
-
-const newVisibility = () => { isVisible2 = !props.isVisible1 }
-
+const newVisibility = () => { 
+  isVisible1 = false }
 
 
 const props = defineProps({
@@ -22,16 +20,14 @@ const props = defineProps({
     },
 })
 
-
-
 </script>
 
 
 <template>
 <div id="app">
-  <StartView v-show="!isVisible1" @toggle-visibility="newVisibility" />
-  <QuestionView  v-show="!isVisible2"/>
-  <ResultView v-show="!isVisible3"/>
+  <StartView v-show="isVisible1=true" @toggle-visibility="newVisibility" />
+  <QuestionView v-show="isVisible1==false"/>
+  <ResultView v-show="isVisible2==true"/>
 </div>
 </template>
 
