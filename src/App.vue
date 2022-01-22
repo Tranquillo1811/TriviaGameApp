@@ -6,6 +6,7 @@ import QuestionView from "./components/QuestionView.vue"
 import ResultView from "./components/ResultView.vue"
 import {reactive, ref, computed}from 'vue'
 
+
 const isVisibleStart = ref(true)
 const isVisible2 = ref(false)
 
