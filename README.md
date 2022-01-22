@@ -1,7 +1,31 @@
-# Vue 3 + Vite
+# TriviaGameApp
+The trivia gaming app is a very simple question / answer game developed with Vue 3 and is only built for educational purposes...
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+# Install
 
-## Recommended IDE Setup
+[Node.js](https://nodejs.org/en/download/)
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+`npm install`
+
+`npm install @vue/cli`
+ 
+VSCode (recommended)
+
+[Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (recommended)
+
+
+# Usage
+`npm start dev`
+
+# Maintainers
+<https://github.com/Tranquillo1811> 
+
+<https://github.com/MichelSaremi>
+
+# Contributing
+This project is not supposed to have any contributors.
+It is supposed to grade the individuals who composed it.
+Right after that it will be - most likely - discontinued...
+
+# License
+MIT &copy; 2022 
