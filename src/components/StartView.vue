@@ -4,21 +4,11 @@ const username = ref('')
 const difficulty = ref('')
 const Qnumber = ref('')
 
-let isVisible1 = reactive('true')
-
-const emit = defineEmits(['toggle-visibility'])
+const emit = defineEmits(['toggle-visibilityStart'])
 
 const onSubmit = () => {
-    emit('toggle-visibility', props.isVisible1) 
+    emit('toggle-visibilityStart') 
 }
-
-
-let props = defineProps({
-    isVisible1:{
-      type: Boolean,
-      required: true,
-    },
-})
 
 </script>
 
