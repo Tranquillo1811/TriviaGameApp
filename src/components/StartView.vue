@@ -3,6 +3,7 @@ import {reactive, ref} from 'vue';
 const username = ref('') 
 const difficulty = ref('')
 const Qnumber = ref('')
+const catagory = ref('')
 
 let isVisible1 = reactive('true')
 

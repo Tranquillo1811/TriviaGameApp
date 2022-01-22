@@ -6,19 +6,19 @@ import QuestionView from "./components/QuestionView.vue"
 import ResultView from "./components/ResultView.vue"
 import {reactive, ref, computed}from 'vue'
 
-let isVisible1 = ref('')
+let isVisible1 = reactive('')
 let isVisible2 = ref('false')
 
 const newVisibility = () => { 
   isVisible1 = false }
 
 
-const props = defineProps({
-    isVisible1:{
-      type: Boolean,
-      required: true,
-    },
-})
+// const props = defineProps({
+//     isVisible1:{
+//       type: Boolean,
+//       required: true,
+//     },
+// })
 
 </script>
 
