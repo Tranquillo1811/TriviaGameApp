@@ -1,21 +1,23 @@
 <script setup>
-  // This starter template is using Vue 3 <script setup> SFCs
-  // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-  import StartView from "./components/StartView.vue"
-  import QuestionView from "./components/QuestionView.vue"
-  import ResultView from "./components/ResultView.vue"
-  import {reactive,onBeforeMount, ref, computed}from 'vue'
+// This starter template is using Vue 3 <script setup> SFCs
+// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+import StartView from "./components/StartView.vue"
+import QuestionView from "./components/QuestionView.vue"
+import ResultView from "./components/ResultView.vue"
+
+import {reactive,onBeforeMount, ref, computed}from 'vue'
 
 
-  const isVisibleStart = ref(true)
-  const isVisible2 = ref(false)
+const isVisibleStart = ref(true)
+const isVisible2 = ref(false)
 
-  const onToggleVisibilityStart = () => { 
-    console.log("ToggleStartVisibility: " + isVisibleStart)
-    isVisibleStart.value = !isVisibleStart
-    Multiple.value = false
-    console.log("from parent "+QuestionType)
-  }
+
+
+const onToggleVisibilityStart = () => { 
+  console.log("ToggleStartVisibility: " + isVisibleStart)
+  isVisibleStart.value = !isVisibleStart
+}
+
 
 </script>
 
@@ -24,8 +26,7 @@
   <div id="app">
 
     <StartView v-if="isVisibleStart" @toggle-visibilityStart="onToggleVisibilityStart()" />
-    <QuestionView v-if="!isVisibleStart && Multiple==true" QuestionType='MultipleChoice' />
-    <QuestionView v-if="!isVisibleStart && Multiple==false" QuestionType='TrueOrFalse' />
+    <QuestionView v-if="!isVisibleStart" />
     <ResultView v-if="isVisible2"/>
 
   </div>
