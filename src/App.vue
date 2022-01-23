@@ -1,24 +1,21 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import StartView from "./components/StartView.vue"
-import QuestionView from "./components/QuestionView.vue"
-import ResultView from "./components/ResultView.vue"
-import {reactive,onBeforeMount, ref, computed}from 'vue'
+  // This starter template is using Vue 3 <script setup> SFCs
+  // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+  import StartView from "./components/StartView.vue"
+  import QuestionView from "./components/QuestionView.vue"
+  import ResultView from "./components/ResultView.vue"
+  import {reactive,onBeforeMount, ref, computed}from 'vue'
 
 
-const isVisibleStart = ref(true)
-const isVisible2 = ref(false)
+  const isVisibleStart = ref(true)
+  const isVisible2 = ref(false)
 
-const QuestionType = ref('')
-const Multiple = ref('')
-
-const onToggleVisibilityStart = () => { 
-  console.log("ToggleStartVisibility: " + isVisibleStart)
-  isVisibleStart.value = !isVisibleStart
-  Multiple.value = false
-  console.log("from parent "+QuestionType)
-}
+  const onToggleVisibilityStart = () => { 
+    console.log("ToggleStartVisibility: " + isVisibleStart)
+    isVisibleStart.value = !isVisibleStart
+    Multiple.value = false
+    console.log("from parent "+QuestionType)
+  }
 
 </script>
 
