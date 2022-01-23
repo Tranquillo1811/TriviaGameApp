@@ -1,9 +1,9 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import App from '../App.vue'
+import QuestionItemVue from './QuestionItem.vue';
 
-const Answers = reactive(["HelloMeoo", "Jhonny","mahh","boosboos"]) 
-const question = "What is the cutest nickname?"
+const question = {"category":"Entertainment: Video Games","type":"multiple","difficulty":"easy","question":"What is the name of the main healing item in Dark Souls?","correct_answer":"Estus Flask","incorrect_answers":["Health Potion","Orange Juice","Ashen Flask"]}
 
 
 const props = defineProps({
@@ -15,23 +15,8 @@ console.log("from child " +props.QuestionType)
 </script>
 
 <template>
-  
-  <div v-if="QuestionType=='MultipleChoice'">
-    <h2>The is the QuestionView</h2>
-    <h2>{{question}}</h2>
-    <ol> 
-      <li v-for="(answer, i) in Answers" :key="i" >
-         <button type="button" > {{ answer }}</button><br><br>
-     </li>
-    </ol>
-  </div>
 
-  <div v-if="QuestionType=='TrueOrFalse'">
-    <h2>The is the QuestionView</h2>
-    <h2>{{question}}</h2>
-         <button type="button">True</button><br><br>
-         <button type="button">False</button><br><br>
-  </div>
+  <QuestionItemVue id="1" :type="question.type" :category="question.category" :question="question.question" :incorrect_answers="question.incorrect_answers" :correct_answer="question.correct_answer" show_correct_answer="false"></QuestionItemVue>
 
 
 </template>

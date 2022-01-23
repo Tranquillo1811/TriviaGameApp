@@ -1,4 +1,6 @@
 <script setup>
+import { compile } from "vue"
+
 
   const props = defineProps({
     id: {
@@ -43,10 +45,37 @@
     }
     })
 
+//////////////////////Shuffle answers and display on buttons
+let AnswerIndex = Math.ceil(Math.random()*4)
+const Answers = [] 
+for (let i=0; i<props.incorrect_answers.length; i++){
+    Answers.push(props.incorrect_answers[i])
+}
+Answers.splice(AnswerIndex, 0, props.correct_answer);
+
 </script>
 
 <template>
-  <h4>This is a Question</h4>
+  {{props.type}}
+  {{Answers}}
+  {{AnswerIndex}}
+  <div v-if="props.type=='multiple'">
+    <h2>The is the QuestionView</h2>
+    <h2>{{question}}</h2>
+    <ol> 
+      <li v-for="(answer, i) in Answers" :key="i" >
+         <button type="button" > {{ answer }}</button><br><br>
+     </li>
+    </ol>
+  </div>
+
+  <div v-if="props.type=='boolean'">
+    <h2>The is the QuestionView</h2>
+    <h2>{{question}}</h2>
+         <button type="button">True</button><br><br>
+         <button type="button">False</button><br><br>
+  </div>
+
   <table>
     <tbody>
       <tr>
@@ -66,9 +95,13 @@
         <td>Given answer:</td>
         <td>{{ given_answer }}</td>
       </tr>
+      <tr>
+        <td>Incorrect answers:</td>
+        <td>{{ incorrect_answers }}</td>
+      </tr>
     </tbody>
   </table>
-  
+
 </template>
 
 <style scoped>
