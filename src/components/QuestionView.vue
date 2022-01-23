@@ -1,8 +1,10 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import App from '../App.vue'
+import QuestionItemVue from './QuestionItem.vue';
 
-const Answers = reactive(["HelloMeoo", "Jhonny","mahh","boosboos"]) 
+const incorrectAnswers = reactive(["Jhonny","mahh","boosboos"]) 
+const correctAnswer = "HelloMeoo"
 const question = "What is the cutest nickname?"
 
 
@@ -16,22 +18,7 @@ console.log("from child " +props.QuestionType)
 
 <template>
   
-  <div v-if="QuestionType=='MultipleChoice'">
-    <h2>The is the QuestionView</h2>
-    <h2>{{question}}</h2>
-    <ol> 
-      <li v-for="(answer, i) in Answers" :key="i" >
-         <button type="button" > {{ answer }}</button><br><br>
-     </li>
-    </ol>
-  </div>
-
-  <div v-if="QuestionType=='TrueOrFalse'">
-    <h2>The is the QuestionView</h2>
-    <h2>{{question}}</h2>
-         <button type="button">True</button><br><br>
-         <button type="button">False</button><br><br>
-  </div>
+  <QuestionItemVue id="1" :question="question" :incorrect_answers="incorrectAnswers" :correct_answer="correctAnswer" show_correct_answer="false"></QuestionItemVue>
 
 
 </template>

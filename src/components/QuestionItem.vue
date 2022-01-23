@@ -43,10 +43,27 @@
     }
     })
 
+
 </script>
 
 <template>
-  <h4>This is a Question</h4>
+  <div v-if="QuestionType=='MultipleChoice'">
+    <h2>The is the QuestionView</h2>
+    <h2>{{question}}</h2>
+    <ol> 
+      <li v-for="(answer, i) in Answers" :key="i" >
+         <button type="button" > {{ answer }}</button><br><br>
+     </li>
+    </ol>
+  </div>
+
+  <div v-if="QuestionType=='TrueOrFalse'">
+    <h2>The is the QuestionView</h2>
+    <h2>{{question}}</h2>
+         <button type="button">True</button><br><br>
+         <button type="button">False</button><br><br>
+  </div>
+
   <table>
     <tbody>
       <tr>
@@ -66,9 +83,13 @@
         <td>Given answer:</td>
         <td>{{ given_answer }}</td>
       </tr>
+      <tr>
+        <td>Incorrect answers:</td>
+        <td>{{ incorrect_answers }}</td>
+      </tr>
     </tbody>
   </table>
-  
+
 </template>
 
 <style scoped>
