@@ -81,7 +81,7 @@ Answers.splice(AnswerIndex, 0, props.correct_answer);
       <tr>
         <td>Question {{ id }}:</td>
         <td v-html="question"></td>
-        <!-- <td>{{ props.question }}</td> -->
+        <!-- <td>{{ question }}</td> -->
       </tr>
       <tr>
         <td>Difficulty:</td>
