@@ -25,10 +25,12 @@ const onToggleVisibilityStart = () => {
 
 <template>
   <div id="app">
+
     <StartView v-if="isVisibleStart" @toggle-visibilityStart="onToggleVisibilityStart()" />
     <QuestionView v-if="!isVisibleStart && Multiple==true" QuestionType='MultipleChoice' />
     <QuestionView v-if="!isVisibleStart && Multiple==false" QuestionType='TrueOrFalse' />
     <ResultView v-if="isVisible2"/>
+
   </div>
 </template>
 
