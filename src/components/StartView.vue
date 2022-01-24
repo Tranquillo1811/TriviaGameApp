@@ -4,11 +4,11 @@ const username = ref('')
 const Qnumber = ref(10)
 const questions = reactive([]); 
 
-const emit = defineEmits(['toggle-visibilityStart'])
+const emit = defineEmits(["start-game"]);
 
     const onSubmit = () => {
         if(Qnumber.value <= 10 && Qnumber.value >= 1) {
-          emit('toggle-visibilityStart');
+          emit("start-game");
           let url = `https://opentdb.com/api.php?amount=${Qnumber.value}`;
           if(selectedCategoryId.value != "") {
             url += `&category=${selectedCategoryId.value}`;
@@ -17,7 +17,7 @@ const emit = defineEmits(['toggle-visibilityStart'])
             url += `&difficulty=${selectedDifficulty.value}`;
           }
           console.log("url",url);
-          fetch("https://opentdb.com/api.php?amount=10&category=21&difficulty=easy")
+          fetch(url)
             .then(response => response.json())
             .then(result => { 
               for (const iterator of result.results) {
