@@ -1,11 +1,15 @@
 <script setup>
-import {reactive, ref} from 'vue';
+  import {reactive, ref} from 'vue';
+  
+  const difficulties = ["easy", "medium", "hard"];
+  const selectedDifficulty = ref("");
+  const selectedCategoryId = ref("");
+  const categories = reactive([]);
+  const username = ref('') 
+  const Qnumber = ref(10)
 
-const username = ref('') 
-const Qnumber = ref(10)
-const questions = reactive([]); 
+  const emit = defineEmits(["start-game"]);
 
-const emit = defineEmits(["start-game"]);
 
 const onSubmit = () => {
 
@@ -113,56 +117,30 @@ const onSubmit = () => {
     })
 
       
-   //------     This is Oliver's part     -----    
-      
-        if(Qnumber.value <= 10 && Qnumber.value >= 1) {
-          emit("start-game");
-          let url = `https://opentdb.com/api.php?amount=${Qnumber.value}`;
-          if(selectedCategoryId.value != "") {
-            url += `&category=${selectedCategoryId.value}`;
-          }
-          if(selectedDifficulty.value != "") {
-            url += `&difficulty=${selectedDifficulty.value}`;
-          }
-          console.log("url",url);
-          fetch(url)
-            .then(response => response.json())
-            .then(result => { 
-              for (const iterator of result.results) {
-                questions.push(iterator);
-              }
-            })
-        }
-        else {
-          alert("Number of questions must be between 1 and 10...");
+ 
+    //------     This is Oliver's part     -----    
+
+
+    if(Qnumber.value <= 10 && Qnumber.value >= 1) {
+      emit("start-game", { 
+        qnumber: Qnumber.value,
+        categoryId: selectedCategoryId.value,
+        difficulty: selectedDifficulty.value 
+      });
     }
-
-    const difficulties = ref(["easy", "medium", "hard"]);
-
-    const questions = reactive([]);
-    fetch("https://opentdb.com/api.php?amount=10")
-      .then(response => response.json())
-      .then(result => { 
-        for (const iterator of result.results) {
-          questions.push(iterator);
-        }
-        
-    })
-
-    const selectedDifficulty = ref("");
-    const selectedCategoryId = ref("");
-
-    const categories = reactive([]);
-    fetch("https://opentdb.com/api_category.php")
-    .then(response => response.json())
-    .then(result => { 
-      for (const iterator of result.trivia_categories) {
-           categories.push(iterator);
-      }
-    })
-}
-}
-
+    else {
+      alert("Number of questions must be between 1 and 10...");
+    }
+  
+  } 
+      
+  fetch("https://opentdb.com/api_category.php")
+  .then(response => response.json())
+  .then(result => { 
+    for (const iterator of result.trivia_categories) {
+      categories.push(iterator);
+    }
+  })
 
 </script>
 

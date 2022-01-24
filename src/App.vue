@@ -5,7 +5,7 @@
   import QuestionView from "./components/QuestionView.vue"
   import ResultView from "./components/ResultView.vue"
 
-  import {reactive,onBeforeMount, ref, computed}from 'vue'
+  import {reactive, onBeforeMount, ref, computed} from 'vue'
 
   const question = {"category":"Entertainment: Video Games","type":"multiple","difficulty":"easy","question":"What is the name of the main healing item in Dark Souls?","correct_answer":"Estus Flask","incorrect_answers":["Health Potion","Orange Juice","Ashen Flask"]}
 
@@ -14,17 +14,18 @@
   const isVisibleResult = ref(false)
 
   const questions = reactive([]);
-  const onStartGame = () => { 
+  const onStartGame = (arg) => { 
+
     console.log("entered OnStartGame");
     isVisibleStart.value = false;
     isVisibleQuestion.value = true;
     isVisibleResult.value = false;
-    let url = `https://opentdb.com/api.php?amount=${Qnumber.value}`;
-      if(selectedCategoryId.value != "") {
-        url += `&category=${selectedCategoryId.value}`;
+    let url = `https://opentdb.com/api.php?amount=${arg.qnumber}`;
+      if(arg.categoryId != "") {
+        url += `&category=${arg.categoryId}`;
       }
-      if(selectedDifficulty.value != "") {
-        url += `&difficulty=${selectedDifficulty.value}`;
+      if(arg.difficulty != "") {
+        url += `&difficulty=${arg.difficulty}`;
       }
       console.log("url",url);
       fetch(url)
@@ -79,9 +80,9 @@
 
 
 <template>
-  <div id="app">
+  <div>
 
-    <StartView v-if="isVisibleStart" @start-game="onStartGame()" />
+    <StartView v-if="isVisibleStart" @start-game="onStartGame" />
     <QuestionView v-if="isVisibleQuestion" :question="question"  />
     <ResultView v-if="isVisibleResult"  @XXX="updateScore()"/>
 

@@ -10,11 +10,12 @@
 </script>
 
 <template>
-  <h2>This is the ResultView</h2>
-  <QuestionListVue :questions="questions">
+  <div>
+    <h2>This is the ResultView</h2>
+    <QuestionListVue :questions="questions">
 
-  </QuestionListVue>
-
+    </QuestionListVue>
+   </div>
 </template>
 
 <style scoped>
