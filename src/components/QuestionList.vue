@@ -2,7 +2,7 @@
     import QuestionItemVue from './QuestionItem.vue';
 
     const props = defineProps({
-        questions: {
+        questions: { 
             type: Array,
             required: true
         } 

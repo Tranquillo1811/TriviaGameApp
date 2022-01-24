@@ -16,7 +16,10 @@ const props = defineProps({
 
 <template>
 
-  <QuestionItemVue :id="props.question.Id" :type="props.question.type" :category="props.question.category" :question="props.question.question" :incorrect_answers="question.incorrect_answers" :correct_answer="question.correct_answer" show_correct_answer="false"></QuestionItemVue>
+  <QuestionItemVue :id="props.question.Id" :type="props.question.type" 
+  :category="props.question.category" :question="props.question.question" 
+  :incorrect_answers="question.incorrect_answers" :correct_answer="question.correct_answer" 
+  show_correct_answer="false"></QuestionItemVue>
 
 </template>
 

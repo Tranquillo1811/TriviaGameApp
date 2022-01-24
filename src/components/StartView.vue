@@ -132,7 +132,7 @@ const onSubmit = () => {
       alert("Number of questions must be between 1 and 10...");
     }
   
-  } 
+  }} 
       
   fetch("https://opentdb.com/api_category.php")
   .then(response => response.json())
