@@ -7,22 +7,47 @@ const questions = reactive([]);
 
 const emit = defineEmits(["start-game"]);
 
-    const onSubmit = () => {
+const onSubmit = () => {
+
+  //////////////////////////////////username validation
+  if (username.value==''){
+    alert("Write a username")
+
+  }else{
    //------     This is Michel's part     ----- 
         console.log(username.value)
-const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
-const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
+        const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
+        const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
 
 
 ///////////////////////////////////////fetch user, if doesnt exist create a new one
+      fetch(`${apiURL}trivia?username=${username.value}`)
+      .then(response => response.json())  
+      .then(response => {
+            if (!(Object.keys(response).length===0)){
+              console.log("Welcome back "+username.value) 
+              console.log(Object.keys(response))
+              console.log(response)
+              console.log("highscore "+response[0].highScore)
 
-fetch(`${apiURL}trivia?username=${username.value}`)
-    .then(response => response.json())
-    .then(response => {
-          if (!(Object.keys(response).length === 0)){
-             console.log("Welcome back "+username.value) 
-          }else{
-             console.log("Welcome "+username.value)
+              /////////////////////////////if no highscore exists for existing user create one
+              if(response[0].highScore==null){
+                fetch(`${apiURL}trivia/${response[0].id}`, {
+                    method: 'PATCH', // NB: Set method to PATCH
+                    headers: {
+                    'X-API-Key': apiKey,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      // Provide new highScore to add to user with id 1
+                      highScore: 0  
+                    })
+              })
+              }
+
+          //////////////creating new user
+            }else{
+              console.log("Welcome "+username.value)
             
                 fetch(`${apiURL}trivia`, {
                         method: 'POST',
@@ -48,10 +73,45 @@ fetch(`${apiURL}trivia?username=${username.value}`)
                 console.log("error "+error)})
           }
     }).catch(error => {
-                console.log("error "+error)})
-     } 
-      
-      
+                console.log("error "+error)}) 
+  
+    ////Testing update score
+    const newScore = 20
+    console.log(username.value)
+   fetch(`${apiURL}trivia?username=${username.value}`)
+      .then(response => response.json())
+      .then(response => {
+          console.log(response)
+          if (response[0].highScore < newScore){
+              
+              fetch(`${apiURL}trivia/${response[0].id}`, {
+                    method: 'PATCH', // NB: Set method to PATCH
+                    headers: {
+                    'X-API-Key': apiKey,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      // Provide new highScore to add to user with id 1
+                      highScore: newScore  
+                    })
+              })
+              .then(response => {
+                   if (!response.ok) {
+                       throw new Error('Could not update high score')
+                    }
+                   return response.json()
+                   })
+              .then(updatedUser => {
+                 // updatedUser is the user with the Patched data
+                 console.log("New Highscore")
+              })
+              .catch(error => {
+              })
+          }else{
+            console.log("Your score is "+newScore)
+          }
+    })
+
       
    //------     This is Oliver's part     -----    
       
@@ -75,7 +135,7 @@ fetch(`${apiURL}trivia?username=${username.value}`)
         }
         else {
           alert("Number of questions must be between 1 and 10...");
-
+    }
 
     const difficulties = ref(["easy", "medium", "hard"]);
 
@@ -87,9 +147,8 @@ fetch(`${apiURL}trivia?username=${username.value}`)
           questions.push(iterator);
         }
         
-    }
+    })
 
-    const difficulties = ["easy", "medium", "hard"];
     const selectedDifficulty = ref("");
     const selectedCategoryId = ref("");
 
@@ -101,7 +160,8 @@ fetch(`${apiURL}trivia?username=${username.value}`)
            categories.push(iterator);
       }
     })
-
+}
+}
 
 
 </script>
@@ -134,7 +194,6 @@ fetch(`${apiURL}trivia?username=${username.value}`)
         :key="category.id"
         :value="category.id">{{category.name}}</option> 
     </select><br><br>
-
 
     <button @click="onSubmit">Start quiz</button>
   </div>
