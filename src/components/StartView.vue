@@ -1,5 +1,6 @@
 <script setup>
 import {reactive, ref} from 'vue';
+
 const username = ref('') 
 const Qnumber = ref('')
 
@@ -7,6 +8,50 @@ const emit = defineEmits(['toggle-visibilityStart'])
 
 const onSubmit = () => {
     emit('toggle-visibilityStart') 
+///////////////////////////////////////registering user with API
+console.log(username.value)
+const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
+const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
+
+
+///////////////////////////////////////fetch user, if doesnt exist create a new one
+
+fetch(`${apiURL}trivia?username=${username.value}`)
+    .then(response => response.json())
+    .then(response => {
+          if (!(Object.keys(response).length === 0)){
+             console.log("Welcome back "+username.value) 
+          }else{
+             console.log("Welcome "+username.value)
+            
+                fetch(`${apiURL}trivia`, {
+                        method: 'POST',
+                        headers: {
+                        'X-API-Key': apiKey,
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                        username: username.value, 
+                        highScore: 0  
+                        })
+                })
+                .then(response => {
+                        if (!response.ok) {
+                        throw new Error('Could not create new user')
+                        }
+                        return response.json()
+                })
+                .then(newUser => {
+                console.log("Created: "+newUser.username.value) 
+                })
+                .catch(error => {
+                console.log("error "+error)})
+          }
+    }).catch(error => {
+                console.log("error "+error)})
+      
+
+/////////////////////////////////
 }
 
     const difficulties = ref(["easy", "medium", "hard"]);
@@ -35,6 +80,7 @@ const onSubmit = () => {
 </script>
 
 <template>
+
   <div>
   <h2>The is the StartView</h2><br>
   <label>Please type in your Username</label><br>
@@ -54,7 +100,8 @@ const onSubmit = () => {
   </select><br><br>
 
   <button @click="onSubmit">Start quiz</button>
-  </div>
+  </div> 
+
 </template>
 
 <style scoped>

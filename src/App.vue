@@ -14,7 +14,7 @@ const isVisible2 = ref(false)
 
 
 const onToggleVisibilityStart = () => { 
-  console.log("ToggleStartVisibility: " + isVisibleStart)
+  console.log("ToggleStartVisibility: " + isVisibleStart.value)
   isVisibleStart.value = !isVisibleStart
 }
 
