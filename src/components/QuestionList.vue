@@ -11,6 +11,7 @@
 </script>
 
 <template>
+<div>
   <h3>I am the questions list</h3>
   <QuestionItemVue v-for="(question, index) in questions" :key="index"
     :id="index + 1"
@@ -22,6 +23,7 @@
     :show_correct_answer="true"
     :given_answer="question.given_answer"
     :show_given_answer="true"               />
+</div>
 </template>
 
 <style scoped>
