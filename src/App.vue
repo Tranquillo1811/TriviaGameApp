@@ -32,16 +32,26 @@
       fetch(url)
       .then(response => response.json())
       .then(result => { 
-        for (const iterator of result.results) {
-          questions.push(iterator);
+        //for (const iterator of result.results) {
+        for (let index = 0; index < result.results.length; index++) {
+          result.results[index].Id = index + 1;
+          questions.push(result.results[index]);
         }
       })
   }
 
   const OnNextQuestion = (previousQuestion) => {
     console.log("previousQuestion", previousQuestion);
-    currentQuestionID.value += 1;
-
+    if(previousQuestion.Id == questions.length) {
+      //---   reached last question
+      console.log("questions",questions);
+    }
+    else {
+      //---   set value for given_answer in previousQuestion to the
+      //      accordant element in questions array
+      questions[previousQuestion.Id].given_answer = previousQuestion.given_answer;
+      currentQuestionID.value += 1;
+    }
   }
 </script>
 
@@ -53,7 +63,7 @@
     <QuestionView v-if="isVisibleQuestion" 
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
-    <ResultView v-if="isVisibleResult"/>
+    <ResultView v-if="isVisibleResult" />
 
   </div>
 </template>
