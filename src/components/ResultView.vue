@@ -2,27 +2,9 @@
   import { ref, computed } from "vue";
   import QuestionListVue from './QuestionList.vue';
   import store from "../store";
-  // import { useStore } from "vuex";
-  
-  // const store = useStore();
-  
-  // const emit = defineEmits(["HighScore"]);
-  // const props = defineProps({  
-  //   questions: {
-  //     type: Array,
-  //     required: true
-  //   }
-  // })
-
-  // //---   Start Test Data   ---
-  // const questions = [{"category":"Entertainment: Video Games","type":"multiple",
-  // "difficulty":"easy","question":"What is the name of the main healing item in Dark Souls?",
-  // "correct_answer":"Estus Flask","incorrect_answers":["Health Potion","Orange Juice","Ashen Flask"]},
-  // {"category":"Mythology","type":"boolean","difficulty":"easy","question":"According to Greek Mythology,Atlas was an Olympian God.","correct_answer":"False","incorrect_answers":["True"]},
-  // {"category":"Politics","type":"multiple","difficulty":"easy","question":"Who was the 45th President of the United States?","correct_answer":"Donald Trump","incorrect_answers":["Barack Obama","Bill Clinton","George Bush"]},{"category":"Entertainment: Television","type":"boolean","difficulty":"medium","question":"In &quot;Star Trek&quot;, Klingons respect William Shakespeare, they even suspect him having a Klingon lineage.","correct_answer":"True","incorrect_answers":["False"]},{"category":"Entertainment: Film","type":"multiple","difficulty":"hard","question":"Which actors made up the trio in &quot;The Good, the Bad, and the Ugly&quot;? ","correct_answer":"Clint Eastwood, Eli Wallach, and Lee Van Cleef","incorrect_answers":["Sergio Leone, Ennio Morricone, and Tonino Delli Colli","Yul Brynner, Steve McQueen, and Charles Bronson","Aldo Giuffr&egrave;, Mario Brega, and Luigi Pistilli"]},{"category":"History","type":"boolean","difficulty":"easy","question":"The French Kingdom helped the United States gain their independence over Great Britain during the Revolutionary War.","correct_answer":"True","incorrect_answers":["False"]},{"category":"General Knowledge","type":"multiple","difficulty":"easy","question":"When someone is inexperienced they are said to be what color?","correct_answer":"Green","incorrect_answers":["Red","Blue","Yellow"]},{"category":"History","type":"multiple","difficulty":"medium","question":"What was the name of the planned invasion of Japan towards the end of World War II?","correct_answer":"Operation Downfall","incorrect_answers":["Operation Boarding Party","Operation Ironclad","Operation Aflame"]},{"category":"Sports","type":"multiple","difficulty":"easy","question":"Which two teams played in Super Bowl XLII?","correct_answer":"The New York Giants &amp; The New England Patriots","incorrect_answers":["The Green Bay Packers &amp; The Pittsburgh Steelers","The Philadelphia Eagles &amp; The New England Patriots","The Seattle Seahawks &amp; The Denver Broncos"]},{"category":"Entertainment: Video Games","type":"multiple","difficulty":"medium","question":"What is a Tetris piece called?","correct_answer":"Tetromino","incorrect_answers":["Tetratile","Tetris","Tetripiece"]}]
-  // //---   End Test Data   ---
- /////////////////////////////////
+ 
  const questions = computed(() => store.state.questions);
+
  console.log(questions.value)
  const newScore=ref(0);
  const score=ref([]);
@@ -43,29 +25,83 @@
   calcScore();
   console.log(newScore.value)
   console.log(score.value)
+  console.log(questions)
+
+  const updateScore = () => { 
+   // const newScore = computed(() => store.state.newScore).value;
+    const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
+    const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
+    const username = computed(() => store.state.userName);
+    const newScore1 = computed(() => store.state.newScore).value;
+    console.log(username.value)
+   fetch(`${apiURL}trivia?username=${username.value}`)
+      .then(response => response.json())
+      .then(response => {
+          console.log("update score "+response)
+          if (response[0].highScore < newScore1){
+              
+              fetch(`${apiURL}trivia/${response[0].id}`, {
+                    method: 'PATCH', // NB: Set method to PATCH
+                    headers: {
+                    'X-API-Key': apiKey,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      // Provide new highScore to add to user with id 1
+                      highScore: newScore1 
+                    })
+              })
+              .then(response => {
+                   if (!response.ok) {
+                       throw new Error('Could not update high score')
+                    }
+                   return response.json()
+                   })
+              .then(updatedUser => {
+                 // updatedUser is the user with the Patched data
+                 console.log("New Highscore")
+              })
+              .then(store.commit("setHighScore",newScore1))
+              .catch(error => {
+              })
+          }else{
+            console.log("Your score is "+newScore1)
+          }
+    })
+  }
+updateScore()
+const highScore = computed(() => store.state.highScore);
+
+ const emit = defineEmits(["reset"]);
+const reset = () => {
+  emit("reset", true, false, false)
+ 
+}
 </script>
 
 <template>
   <div>
-    
     <h2>This is the ResultView</h2>    
     <h3>Your total score is {{ newScore }} </h3>
+    <h3>Your high-score is {{highScore}}</h3>
     <ol>
     <li v-for="question in questions" :key="question.Id" >
-        <tr>
-          <td>Your answer: {{ question.given_answer }}</td>
-          <td>----</td>
-          <td>Correct answer: {{ question.correct_answer }}</td>
-          <td>----</td>
-          <td>Score: {{ score[question.Id - 1] }}</td>
-        </tr>
+        <tr>{{question.question}}</tr>
+        <tr>Your answer: {{ question.given_answer }}</tr>
+        <tr>Correct answer: {{ question.correct_answer }}</tr>
+        <tr>Score gained: {{ score[question.Id - 1] }}</tr>
+        <br><br>
     </li>
     </ol>
+    <button @click="reset">Back to start</button>
    </div>
 </template>
 
 <style scoped>
 h2 {
   color: red;
+}
+ol {
+  text-align: left;
 }
 </style>
