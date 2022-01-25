@@ -1,62 +1,125 @@
 <script setup>
   import {reactive, ref} from 'vue';
-
+  
+  const difficulties = ["easy", "medium", "hard"];
+  const selectedDifficulty = ref("");
+  const selectedCategoryId = ref("");
+  const categories = reactive([]);
   const username = ref('') 
   const Qnumber = ref(10)
 
   const emit = defineEmits(["start-game"]);
 
-  const difficulties = ["easy", "medium", "hard"];
-  const selectedDifficulty = ref("");
-  const selectedCategoryId = ref("");
-  const categories = reactive([]);
-  
-  const onSubmit = () => {
-    //------     This is Michel's part     ----- 
-    console.log(username.value)
-    const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
-    const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
+
+const onSubmit = () => {
+
+  //////////////////////////////////username validation
+  if (username.value==''){
+    alert("Write a username")
+
+  }else{
+   //------     This is Michel's part     ----- 
+        console.log(username.value)
+        const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
+        const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
 
 
-    ///////////////////////////////////////fetch user, if doesnt exist create a new one
+///////////////////////////////////////fetch user, if doesnt exist create a new one
+      fetch(`${apiURL}trivia?username=${username.value}`)
+      .then(response => response.json())  
+      .then(response => {
+            if (!(Object.keys(response).length===0)){
+              console.log("Welcome back "+username.value) 
+              console.log(Object.keys(response))
+              console.log(response)
+              console.log("highscore "+response[0].highScore)
 
-    fetch(`${apiURL}trivia?username=${username.value}`)
-    .then(response => response.json())
-    .then(response => {
-      if (!(Object.keys(response).length === 0)){
-        console.log("Welcome back "+username.value) 
-      }
-      else {
-        console.log("Welcome "+username.value);
-        fetch(`${apiURL}trivia`, {
-          method: 'POST',
-          headers: {
-            'X-API-Key': apiKey,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ 
-            username: username.value, 
-            highScore: 0  
-          })
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Could not create new user')
+              /////////////////////////////if no highscore exists for existing user create one
+              if(response[0].highScore==null){
+                fetch(`${apiURL}trivia/${response[0].id}`, {
+                    method: 'PATCH', // NB: Set method to PATCH
+                    headers: {
+                    'X-API-Key': apiKey,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      // Provide new highScore to add to user with id 1
+                      highScore: 0  
+                    })
+              })
+              }
+
+          //////////////creating new user
+            }else{
+              console.log("Welcome "+username.value)
+            
+                fetch(`${apiURL}trivia`, {
+                        method: 'POST',
+                        headers: {
+                        'X-API-Key': apiKey,
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                        username: username.value, 
+                        highScore: 0  
+                        })
+                })
+                .then(response => {
+                        if (!response.ok) {
+                        throw new Error('Could not create new user')
+                        }
+                        return response.json()
+                })
+                .then(newUser => {
+                console.log("Created: "+newUser.username.value) 
+                })
+                .catch(error => {
+                console.log("error "+error)})
           }
-          return response.json()
-        })
-        .then(newUser => {
-          console.log("Created: "+newUser.username.value) 
-        })
-        .catch(error => {
-          console.log("error "+error)
-        })
-      }
+    }).catch(error => {
+                console.log("error "+error)}) 
+  
+    ////Testing update score
+    const newScore = 20
+    console.log(username.value)
+   fetch(`${apiURL}trivia?username=${username.value}`)
+      .then(response => response.json())
+      .then(response => {
+          console.log(response)
+          if (response[0].highScore < newScore){
+              
+              fetch(`${apiURL}trivia/${response[0].id}`, {
+                    method: 'PATCH', // NB: Set method to PATCH
+                    headers: {
+                    'X-API-Key': apiKey,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      // Provide new highScore to add to user with id 1
+                      highScore: newScore  
+                    })
+              })
+              .then(response => {
+                   if (!response.ok) {
+                       throw new Error('Could not update high score')
+                    }
+                   return response.json()
+                   })
+              .then(updatedUser => {
+                 // updatedUser is the user with the Patched data
+                 console.log("New Highscore")
+              })
+              .catch(error => {
+              })
+          }else{
+            console.log("Your score is "+newScore)
+          }
     })
-    .catch(error => {
-      console.log("error "+error)})
 
+      
+ 
     //------     This is Oliver's part     -----    
+
 
     if(Qnumber.value <= 10 && Qnumber.value >= 1) {
       emit("start-game", { 
@@ -69,7 +132,7 @@
       alert("Number of questions must be between 1 and 10...");
     }
   
-  } 
+  }} 
       
   fetch("https://opentdb.com/api_category.php")
   .then(response => response.json())
@@ -109,7 +172,6 @@
         :key="category.id"
         :value="category.id">{{category.name}}</option> 
     </select><br><br>
-
 
     <button @click="onSubmit">Start quiz</button>
   </div>

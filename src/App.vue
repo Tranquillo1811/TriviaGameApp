@@ -7,8 +7,6 @@
 
   import {reactive, onBeforeMount, ref, computed} from 'vue'
 
-  //const question = {"category":"Entertainment: Video Games","type":"multiple","difficulty":"easy","question":"What is the name of the main healing item in Dark Souls?","correct_answer":"Estus Flask","incorrect_answers":["Health Potion","Orange Juice","Ashen Flask"]}
-  
   const isVisibleStart = ref(true)
   const isVisibleQuestion = ref(false)
   const isVisibleResult = ref(false)
@@ -40,7 +38,7 @@
       })
   }
 
-  const OnNextQuestion = (previousQuestion) => {
+ const OnNextQuestion = (previousQuestion) => {
     console.log("previousQuestion", previousQuestion);
     if(previousQuestion.Id == questions.length) {
       //---   reached last question
@@ -55,6 +53,48 @@
       currentQuestionID.value += 1;
     }
   }
+
+/////////////////////////calculate score
+
+  ///////////////////////Fetch user and update highscore
+  const updateScore = () => { 
+    
+    console.log(username.value)
+   fetch(`${apiURL}trivia?username=${username.value}`)
+      .then(response => response.json())
+      .then(response => {
+          console.log(response)
+          if (response[0].highScore < newScore){
+              
+              fetch(`${apiURL}trivia/${response[0].id}`, {
+                    method: 'PATCH', // NB: Set method to PATCH
+                    headers: {
+                    'X-API-Key': apiKey,
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      // Provide new highScore to add to user with id 1
+                      highScore: newScore  
+                    })
+              })
+              .then(response => {
+                   if (!response.ok) {
+                       throw new Error('Could not update high score')
+                    }
+                   return response.json()
+                   })
+              .then(updatedUser => {
+                 // updatedUser is the user with the Patched data
+                 console.log("New Highscore")
+              })
+              .catch(error => {
+              })
+          }else{
+            console.log("Your score is "+newScore)
+          }
+    })
+  }
+
 </script>
 
 
@@ -65,7 +105,9 @@
     <QuestionView v-if="isVisibleQuestion" 
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
-    <ResultView v-if="isVisibleResult" />
+   
+    <ResultView v-if="isVisibleResult"  @HighScore="updateScore"/>
+
 
   </div>
 </template>

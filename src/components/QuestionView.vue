@@ -3,8 +3,6 @@
   import App from '../App.vue'
   import QuestionItemVue from './QuestionItem.vue';
 
-  //const question = {"category":"Entertainment: Video Games","type":"multiple","difficulty":"easy","question":"What is the name of the main healing item in Dark Souls?","correct_answer":"Estus Flask","incorrect_answers":["Health Potion","Orange Juice","Ashen Flask"]}
-
   const emits = defineEmits("next-question");
 
   const props = defineProps({
@@ -24,7 +22,7 @@
 <template>
 
   <QuestionItemVue v-if="props.question != undefined" 
-    id="1" 
+    :id="props.question.Id" 
     :type="props.question.type" 
     :category="props.question.category" 
     :question="props.question.question" 
