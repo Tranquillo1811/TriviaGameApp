@@ -25,6 +25,7 @@
     :id="props.question.Id" 
     :type="props.question.type" 
     :category="props.question.category" 
+    :difficulty="props.question.difficulty" 
     :question="props.question.question" 
     :incorrect_answers="question.incorrect_answers" 
     :correct_answer="question.correct_answer" 

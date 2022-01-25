@@ -47,8 +47,6 @@
     })
 
   const onSubmit = (answer) => {
-    //props.given_answer = answer;  //--- is readonly here...
-
     emits("question-answered", answer);
   };
 
@@ -80,21 +78,31 @@
 
 <template>
   <div>
-    <h2 v-html="question"></h2>
-    <div v-if="props.type=='multiple'">
-      <ol> 
+    <section title="header">
+      <h2>Question No. {{ id }}</h2>
+    </section>
+    <section title="category">
+      <h4>Category: <span v-html="category"></span></h4>
+      <h4>Difficulty: <span v-html="difficulty"></span></h4>
+    </section>
+    <section title="category">
+      <h3 v-html="question"></h3>
+    </section>
+
+    <div v-if="type=='multiple'">
+      <ul> 
         <li v-for="(answer, i) in Answers" :key="i" >
           <button type="button" @click="onSubmit(answer)" v-html="answer"></button><br><br>
         </li>
-      </ol>
+      </ul>
     </div>
 
-    <div v-if="props.type=='boolean'">
+    <div v-if="type=='boolean'">
       <button type="button" @click="onSubmit('True')">True</button><br><br>
       <button type="button" @click="onSubmit('False')">False</button><br><br>
     </div>
 
-    <table v-if="props.type=='result'">
+    <table v-if="type=='result'">
       <tbody>
         <tr>
           <td>Question {{ id }}:</td>
@@ -124,11 +132,17 @@
 </template>
 
 <style scoped>
-h2 {
-  color: royalblue;
-}
-td {
-    text-align: left;
-    padding: 5px 10px;
-}
+  h3 {
+    color: royalblue;
+  }
+  td {
+      text-align: left;
+      padding: 5px 10px;
+  }
+  div {
+    margin: 10px 50px;
+  }
+  li {
+    list-style-type: none;
+  }
 </style>

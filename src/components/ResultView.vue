@@ -1,16 +1,14 @@
 <script setup>
   import { ref, computed } from "vue";
   import QuestionListVue from './QuestionList.vue';
-  import store from "../store";
+  import { useStore } from "vuex";
+  
+  const store = useStore();
+  const questions = computed(() => store.state.questions);
+  const newScore=ref(0);
+  const score=ref([]);
  
- const questions = computed(() => store.state.questions);
-
- console.log(questions.value)
- const newScore=ref(0);
- const score=ref([]);
- 
- const calcScore = () => {  
-    
+  const calcScore = () => {   
     for(let i =0; i<questions.value.length ; i++){
       if ((questions.value)[i].given_answer ==(questions.value)[i].correct_answer){
           newScore.value += 10
@@ -23,6 +21,7 @@
     // emit('HighScore', newScore.value )
   }
   calcScore();
+
   console.log(newScore.value)
   console.log(score.value)
   console.log(questions)
@@ -81,7 +80,7 @@ const reset = () => {
 
 <template>
   <div>
-    <h2>This is the ResultView</h2>    
+    <h2>Let's see what you achieved...</h2>    
     <h3>Your total score is {{ newScore }} </h3>
     <h3>Your high-score is {{highScore}}</h3>
     <ol>
@@ -90,7 +89,6 @@ const reset = () => {
         <tr>Your answer: {{ question.given_answer }}</tr>
         <tr>Correct answer: {{ question.correct_answer }}</tr>
         <tr>Score gained: {{ score[question.Id - 1] }}</tr>
-        <br><br>
     </li>
     </ol>
     <button @click="reset">Back to start</button>
@@ -98,10 +96,13 @@ const reset = () => {
 </template>
 
 <style scoped>
-h2 {
-  color: red;
-}
-ol {
+  h2 {
+    color: red;
+  }
+  td {
+    padding: 10px 20px;
+  }
+  ol {
   text-align: left;
-}
+  }
 </style>
