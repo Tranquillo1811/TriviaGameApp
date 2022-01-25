@@ -5,7 +5,6 @@
   import QuestionView from "./components/QuestionView.vue"
   import ResultView from "./components/ResultView.vue"
   import store from "./store";
-
   import {reactive, onBeforeMount, ref, computed} from 'vue'
 
   const isVisibleStart = ref(true)
@@ -40,20 +39,17 @@
       .then(store.commit("setQuestions",questions))
   }
 
- const OnNextQuestion = (previousQuestion) => {
-    console.log("previousQuestion", previousQuestion);
-    questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
-    if(previousQuestion.Id == questions.length) {
-      //---   reached last question
-      console.log("questions",questions);
-      //---   call result view
-      isVisibleStart.value = false;
-      isVisibleQuestion.value = false;
-      isVisibleResult.value = true;
-    }
-    else {
-      //---   set value for given_answer in previousQuestion to the
-      //      accordant element in questions array
+const OnNextQuestion = (previousQuestion) => {
+  //---   set value for given_answer in previousQuestion to the
+  //      accordant element in questions array
+  questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
+  if(previousQuestion.Id == questions.length) {
+    //---   reached last question
+    isVisibleStart.value = false;
+    isVisibleQuestion.value = false;
+    isVisibleResult.value = true;
+  }
+  else {
       currentQuestionID.value += 1;
     }
   }
