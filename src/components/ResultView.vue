@@ -1,8 +1,9 @@
 <script setup>
   import { ref, computed } from "vue";
-  import QuestionListVue from './QuestionList.vue';
-  import { store } from "../store";
+  //import { store } from "../store";
+  import { useStore } from "vuex";
   
+  const store = useStore();
   //--- access to questions array in store (containing the questions picked up by the API)
   const questions = computed(() => store.state.questions);
   const newScore=ref(0);   //--- overall user score of current game
