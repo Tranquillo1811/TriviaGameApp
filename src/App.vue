@@ -17,9 +17,21 @@
   const history = reactive([]);
   const currentQuestionID = ref(0);
 
+  const sessionToken = ref('')
+  
+  const getSessionToken = () => {
+
+  fetch('https://opentdb.com/api_token.php?command=request')
+  .then(response => response.json())
+  .then(result => {
+      sessionToken.value = result.token
+  })
+  }
+  getSessionToken()
+
   const onStartGame = (arg) => { 
     console.log("entered OnStartGame");
-    
+    currentQuestionID.value =0;
     isVisibleStart.value = false;
     isVisibleQuestion.value = true;
     isVisibleResult.value = false;
@@ -31,6 +43,8 @@
       if(arg.difficulty != "") {
         url += `&difficulty=${arg.difficulty}`;
       }
+      url +=("&token="+sessionToken.value)
+
       console.log("url",url);
       fetch(url)
       .then(response => response.json())
@@ -72,7 +86,7 @@ const onReset = (start, question, result) => {
 <template>
   <div>
 
-    <StartView v-if="isVisibleStart" @start-game="onStartGame" />
+    <StartView v-show="isVisibleStart" @start-game="onStartGame" />
     <QuestionView v-if="isVisibleQuestion" 
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />

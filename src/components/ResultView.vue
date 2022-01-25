@@ -85,10 +85,11 @@ const reset = () => {
     <h3>Your high-score is {{highScore}}</h3>
     <ol>
     <li v-for="question in questions" :key="question.Id" >
-        <tr>{{question.question}}</tr>
+        <tr v-html="question.question"></tr>
         <tr>Your answer: {{ question.given_answer }}</tr>
         <tr>Correct answer: {{ question.correct_answer }}</tr>
         <tr>Score gained: {{ score[question.Id - 1] }}</tr>
+        <br><br>
     </li>
     </ol>
     <button @click="reset">Back to start</button>
