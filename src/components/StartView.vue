@@ -1,5 +1,6 @@
 <script setup>
-  import {reactive, ref} from 'vue';
+  import { reactive, ref, computed } from 'vue';
+  import { useStore } from 'vuex';
   
   const difficulties = ["easy", "medium", "hard"];
   const selectedDifficulty = ref("");
@@ -9,15 +10,16 @@
   const Qnumber = ref(10)
 
   const emit = defineEmits(["start-game"]);
-
+  const store = useStore();
 
 const onSubmit = () => {
 
   //////////////////////////////////username validation
   if (username.value==''){
     alert("Write a username")
-
   }else{
+    //--- write the username to the store
+    store.commit("setUserName", username.value); 
    //------     This is Michel's part     ----- 
         console.log(username.value)
         const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
@@ -82,39 +84,39 @@ const onSubmit = () => {
     ////Testing update score
     const newScore = 20
     console.log(username.value)
-   fetch(`${apiURL}trivia?username=${username.value}`)
-      .then(response => response.json())
-      .then(response => {
-          console.log(response)
-          if (response[0].highScore < newScore){
+  //  fetch(`${apiURL}trivia?username=${username.value}`)
+  //     .then(response => response.json())
+  //     .then(response => {
+  //         console.log(response)
+  //         if (response[0].highScore < newScore){
               
-              fetch(`${apiURL}trivia/${response[0].id}`, {
-                    method: 'PATCH', // NB: Set method to PATCH
-                    headers: {
-                    'X-API-Key': apiKey,
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      // Provide new highScore to add to user with id 1
-                      highScore: newScore  
-                    })
-              })
-              .then(response => {
-                   if (!response.ok) {
-                       throw new Error('Could not update high score')
-                    }
-                   return response.json()
-                   })
-              .then(updatedUser => {
-                 // updatedUser is the user with the Patched data
-                 console.log("New Highscore")
-              })
-              .catch(error => {
-              })
-          }else{
-            console.log("Your score is "+newScore)
-          }
-    })
+  //             fetch(`${apiURL}trivia/${response[0].id}`, {
+  //                   method: 'PATCH', // NB: Set method to PATCH
+  //                   headers: {
+  //                   'X-API-Key': apiKey,
+  //                   'Content-Type': 'application/json'
+  //                   },
+  //                   body: JSON.stringify({
+  //                     // Provide new highScore to add to user with id 1
+  //                     highScore: newScore  
+  //                   })
+  //             })
+  //             .then(response => {
+  //                  if (!response.ok) {
+  //                      throw new Error('Could not update high score')
+  //                   }
+  //                  return response.json()
+  //                  })
+  //             .then(updatedUser => {
+  //                // updatedUser is the user with the Patched data
+  //                console.log("New Highscore")
+  //             })
+  //             .catch(error => {
+  //             })
+  //         }else{
+  //           console.log("Your score is "+newScore)
+  //         }
+  //   })
 
       
  

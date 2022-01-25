@@ -4,6 +4,7 @@
   import StartView from "./components/StartView.vue"
   import QuestionView from "./components/QuestionView.vue"
   import ResultView from "./components/ResultView.vue"
+  import store from "./store";
 
   import {reactive, onBeforeMount, ref, computed} from 'vue'
 
@@ -36,20 +37,23 @@
           questions.push(result.results[index]);
         }
       })
+      .then(store.commit("setQuestions",questions))
   }
 
  const OnNextQuestion = (previousQuestion) => {
     console.log("previousQuestion", previousQuestion);
+    questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
     if(previousQuestion.Id == questions.length) {
       //---   reached last question
       console.log("questions",questions);
-      //---   call resultview
-
+      //---   call result view
+      isVisibleStart.value = false;
+      isVisibleQuestion.value = false;
+      isVisibleResult.value = true;
     }
     else {
       //---   set value for given_answer in previousQuestion to the
       //      accordant element in questions array
-      questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
       currentQuestionID.value += 1;
     }
   }
@@ -58,7 +62,10 @@
 
   ///////////////////////Fetch user and update highscore
   const updateScore = () => { 
-    
+    const newScore = computed(() => store.state.newScore).value;
+    const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
+    const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
+    const username = computed(() => store.state.userName);
     console.log(username.value)
    fetch(`${apiURL}trivia?username=${username.value}`)
       .then(response => response.json())
@@ -106,7 +113,7 @@
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
    
-    <ResultView v-if="isVisibleResult"  @HighScore="updateScore"/>
+    <ResultView v-if="isVisibleResult" />
 
 
   </div>
