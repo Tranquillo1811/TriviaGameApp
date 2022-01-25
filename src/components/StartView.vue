@@ -1,7 +1,9 @@
 <script setup>
   import { reactive, ref, computed } from 'vue';
-  import { store } from '../store';
+  //import { store } from '../store';
+  import { useStore } from 'vuex'; 
   
+  const store = useStore();
   //--- hard-coded values for various difficulty levels (no API found to retrieve that)
   const difficulties = ["easy", "medium", "hard"];
 
