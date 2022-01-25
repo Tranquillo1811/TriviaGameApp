@@ -14,7 +14,7 @@
 
 
   const questions = reactive([]);
-  const history = reactive([]);
+
   const currentQuestionID = ref(0);
 
   const sessionToken = ref('')
@@ -30,6 +30,10 @@
   getSessionToken()
 
   const onStartGame = (arg) => { 
+
+    while(questions.length > 0) {
+      questions.pop();
+    }
     console.log("entered OnStartGame");
     currentQuestionID.value =0;
     isVisibleStart.value = false;
@@ -53,7 +57,16 @@
         for (let index = 0; index < result.results.length; index++) {
           result.results[index].Id = index + 1;
           questions.push(result.results[index]);
-          history.push(result.results[index])
+
+        }
+        //////////////If no more questions reset token
+        if (Object.keys(response).length===0){
+          alert("No more questions!")
+          let url2=`https://opentdb.com/api_token.php?command=reset&token=${sessionToken.value}`
+          fetch(url2)
+          .then(response => response.json())
+          .then(result => { })
+
         }
       })
       .then(store.commit("setQuestions",questions))
@@ -78,7 +91,6 @@ const onReset = (start, question, result) => {
     isVisibleStart.value = start;
     isVisibleQuestion.value = question;
     isVisibleResult.value = result;
-
 }  
 </script>
 
