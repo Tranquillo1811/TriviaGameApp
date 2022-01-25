@@ -37,6 +37,7 @@
           questions.push(result.results[index]);
         }
       })
+      .then(store.commit("setQuestions",questions))
   }
 
  const OnNextQuestion = (previousQuestion) => {
@@ -61,6 +62,7 @@
 
   ///////////////////////Fetch user and update highscore
   const updateScore = () => { 
+    const newScore = computed(() => store.state.newScore).value;
     const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
     const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
     const username = computed(() => store.state.userName);
@@ -111,7 +113,7 @@
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
    
-    <ResultView v-if="isVisibleResult" @HighScore="updateScore" :questions="questions" />
+    <ResultView v-if="isVisibleResult" />
 
 
   </div>

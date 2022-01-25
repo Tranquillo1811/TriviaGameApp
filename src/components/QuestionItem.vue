@@ -90,8 +90,8 @@
     </div>
 
     <div v-if="props.type=='boolean'">
-      <button type="button" @click="onSubmit('true')">True</button><br><br>
-      <button type="button" @click="onSubmit('false')">False</button><br><br>
+      <button type="button" @click="onSubmit('True')">True</button><br><br>
+      <button type="button" @click="onSubmit('False')">False</button><br><br>
     </div>
 
     <table v-if="props.type=='result'">
