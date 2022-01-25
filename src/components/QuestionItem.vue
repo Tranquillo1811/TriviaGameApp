@@ -1,3 +1,4 @@
+<!-- this component represents a single question and is referenced in the QuestionView component-->
 <script setup>
   import { ref, onMounted, onBeforeUpdate } from 'vue';
 
@@ -53,6 +54,7 @@
   const AnswerIndex = ref(0);
   const Answers = ref([]); 
   
+  //---   merges correct and incorrect answers and shuffles the new array
   const shuffleAnswers = () => {
     console.log("onMounted entered");
     const incorrect_answers = JSON.parse(JSON.stringify(props.incorrect_answers));
@@ -70,8 +72,10 @@
     Answers.value.splice(AnswerIndex.value, 0, correct_answer);
   }
   
+  //--- needed to re-shuffle on mount (first page visit)
   onMounted(shuffleAnswers)
 
+  //--- needed to re-shuffle when component is updated (on next question)
   onBeforeUpdate(shuffleAnswers);
   
 </script>
@@ -81,6 +85,7 @@
     <section title="header">
       <h2>Question No. {{ id }}</h2>
     </section>
+
     <section title="category">
       <h4>Category: <span v-html="category"></span></h4>
       <h4>Difficulty: <span v-html="difficulty"></span></h4>

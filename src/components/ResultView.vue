@@ -1,13 +1,14 @@
 <script setup>
   import { ref, computed } from "vue";
   import QuestionListVue from './QuestionList.vue';
-  import { useStore } from "vuex";
+  import { store } from "../store";
   
-  const store = useStore();
+  //--- access to questions array in store (containing the questions picked up by the API)
   const questions = computed(() => store.state.questions);
-  const newScore=ref(0);
-  const score=ref([]);
+  const newScore=ref(0);   //--- overall user score of current game
+  const score=ref([]);    //--- array containing score per question
  
+  //--- populates newScore and score
   const calcScore = () => {   
     for(let i =0; i<questions.value.length ; i++){
       if ((questions.value)[i].given_answer ==(questions.value)[i].correct_answer){
@@ -18,16 +19,12 @@
       }
     } 
     store.commit("setNewScore", newScore.value)
-    // emit('HighScore', newScore.value )
   }
   calcScore();
 
-  console.log(newScore.value)
-  console.log(score.value)
-  console.log(questions)
-
+  //--- checkes if the achieved result is higher then the current highscore in the DB
+  //--- and if, updates it accordingly
   const updateScore = () => { 
-   // const newScore = computed(() => store.state.newScore).value;
     const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
     const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
     const username = computed(() => store.state.userName);
@@ -71,10 +68,10 @@
 updateScore()
 const highScore = computed(() => store.state.highScore);
 
- const emit = defineEmits(["reset"]);
+//---   used to signal a new game start by changing visibilty of different components
+const emit = defineEmits(["reset"]);
 const reset = () => {
   emit("reset", true, false, false)
- 
 }
 </script>
 
