@@ -40,16 +40,18 @@
 
  const OnNextQuestion = (previousQuestion) => {
     console.log("previousQuestion", previousQuestion);
+    questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
     if(previousQuestion.Id == questions.length) {
       //---   reached last question
       console.log("questions",questions);
-      //---   call resultview
-
+      //---   call result view
+      isVisibleStart.value = false;
+      isVisibleQuestion.value = false;
+      isVisibleResult.value = true;
     }
     else {
       //---   set value for given_answer in previousQuestion to the
       //      accordant element in questions array
-      questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
       currentQuestionID.value += 1;
     }
   }
@@ -106,7 +108,7 @@
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
    
-    <ResultView v-if="isVisibleResult"  @HighScore="updateScore"/>
+    <ResultView v-if="isVisibleResult" @HighScore="updateScore" :questions="questions" />
 
 
   </div>
