@@ -1,17 +1,22 @@
 <script setup>
   import { reactive, ref, computed } from 'vue';
-  import { useStore } from 'vuex';
+  import { store } from '../store';
   
+  //--- hard-coded values for various difficulty levels (no API found to retrieve that)
   const difficulties = ["easy", "medium", "hard"];
+
   const selectedDifficulty = ref("");
   const selectedCategoryId = ref("");
+  //--- retrieved question categories will be stored in here
   const categories = reactive([]);
   const username = ref('') 
+  //--- number of Questions
   const Qnumber = ref(10)
 
+  //--- event when game is started by user. subscribed to in app.vue
   const emit = defineEmits(["start-game"]);
-  const store = useStore();
 
+  //--- action when button to start the quiz is clicked
   const onSubmit = () => {
     //---   username validation
   if (username.value==''){
@@ -62,17 +67,14 @@
           }
           return response.json()
         })
-        .then(newUser => {
-                console.log("Created: "+newUser.username.value) 
-                })
-                .catch(error => {
-                console.log("error "+error)})
-          }
+        .catch(error => {
+          console.log("error "+error)})
+        }
     })
     .catch(error => {
       console.log("error " + error)
     }) 
-  
+    //--- validating the number of questions is between 1 and 10
     if(Qnumber.value <= 10 && Qnumber.value >= 1) {
       emit("start-game", { 
         qnumber: Qnumber.value,
@@ -86,7 +88,7 @@
   
   }} 
 
-  //---   Get all available question categories
+  //---   Get all available question categories to populate into select element
   fetch("https://opentdb.com/api_category.php")
   .then(response => response.json())
   .then(result => { 

@@ -7,39 +7,43 @@
   import store from "./store";
   import {reactive, onBeforeMount, ref, computed} from 'vue'
 
+  //--- control the visibilty of the respective views (components)
   const isVisibleStart = ref(true);
   const isVisibleQuestion = ref(false);
   const isVisibleResult = ref(false);
 
-
-
+  //--- used to store retrieved questions from API
   const questions = reactive([]);
 
+  //--- id of the current question being displayed
   const currentQuestionID = ref(0);
 
+  //--- stores session token for question API call 
   const sessionToken = ref('')
   
+  //---- retrieve session token
   const getSessionToken = () => {
-
-  fetch('https://opentdb.com/api_token.php?command=request')
-  .then(response => response.json())
-  .then(result => {
+    fetch('https://opentdb.com/api_token.php?command=request')
+    .then(response => response.json())
+    .then(result => {
       sessionToken.value = result.token
-  })
+    })
   }
   getSessionToken()
 
+  //--- function that is executed when a new round of questions is initiated
   const onStartGame = (arg) => { 
-
+    //--- ensure that question array is empty
     while(questions.length > 0) {
       questions.pop();
     }
-    console.log("entered OnStartGame");
     currentQuestionID.value =0;
+    //--- set initital visibility
     isVisibleStart.value = false;
     isVisibleQuestion.value = true;
     isVisibleResult.value = false;
 
+    //--- generating URL for Question API call
     let url = `https://opentdb.com/api.php?amount=${arg.qnumber}`;
       if(arg.categoryId != "") {
         url += `&category=${arg.categoryId}`;
@@ -48,16 +52,14 @@
         url += `&difficulty=${arg.difficulty}`;
       }
       url +=("&token="+sessionToken.value)
-
-      console.log("url",url);
+      //--- actually call the question API
       fetch(url)
       .then(response => response.json())
       .then(result => { 
-        //for (const iterator of result.results) {
+        //--- push retrieved questions to questions array
         for (let index = 0; index < result.results.length; index++) {
           result.results[index].Id = index + 1;
           questions.push(result.results[index]);
-
         }
         //////////////If no more questions reset token
         if (Object.keys(response).length===0){
@@ -66,28 +68,34 @@
           fetch(url2)
           .then(response => response.json())
           .then(result => { })
-
         }
       })
+      //--- store questions array into store state
       .then(store.commit("setQuestions",questions))
   }
 
+//---   function that is called on "next-question" event (triggered when the user answered the previous question)
+//---   previousQuestion contains the question object returned from the next-question event in the QuestionView
 const OnNextQuestion = (previousQuestion) => {
   //---   set value for given_answer in previousQuestion to the
   //      accordant element in questions array
   questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
   if(previousQuestion.Id == questions.length) {
     //---   reached last question
+    //---   set new visibility status
     isVisibleStart.value = false;
     isVisibleQuestion.value = false;
     isVisibleResult.value = true;
   }
-  else {
+  else {   //---   last question is not yet reached
+      //---   raise the counter for the current question
+      //---   This actually automatically refreshed the QuestionView component with the next question
       currentQuestionID.value += 1;
     }
   }
-const onReset = (start, question, result) => { 
-    
+
+//---   function to return to the StartView
+const onReset = (start, question, result) => {     
     isVisibleStart.value = start;
     isVisibleQuestion.value = question;
     isVisibleResult.value = result;
@@ -102,9 +110,7 @@ const onReset = (start, question, result) => {
     <QuestionView v-if="isVisibleQuestion" 
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
-   
     <ResultView v-if="isVisibleResult" @reset="onReset" />
-
 
   </div>
 </template>
