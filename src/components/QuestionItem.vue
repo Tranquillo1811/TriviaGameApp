@@ -1,4 +1,7 @@
 <script setup>
+  import { ref, onMounted, onBeforeUpdate } from 'vue';
+
+  const emits = defineEmits(["question-answered"]);
 
   const props = defineProps({
     id: {
@@ -43,55 +46,59 @@
     }
     })
 
-  //////////////////////Shuffle answers and display on buttons
-  let AnswerIndex = Math.ceil(Math.random()*4);
-  const Answers = []; 
-  for (let i=0; i<props.incorrect_answers.length; i++) {
-    Answers.push(props.incorrect_answers[i])
+  const onSubmit = (answer) => {
+    //props.given_answer = answer;  //--- is readonly here...
+
+    emits("question-answered", answer);
+  };
+
+  const AnswerIndex = ref(0);
+  const Answers = ref([]); 
+  
+  const shuffleAnswers = () => {
+    console.log("onMounted entered");
+    const incorrect_answers = JSON.parse(JSON.stringify(props.incorrect_answers));
+    console.log("incorrect_answers",incorrect_answers);
+    Answers.value = [];
+    //////////////////////Shuffle answers and display on buttons
+    console.log("AnswerIndex",AnswerIndex)
+    console.log("Answers",Answers)
+    AnswerIndex.value = Math.ceil(Math.random()*4);
+    for (let i = 0; i < incorrect_answers.length; i++) {
+      Answers.value.push(incorrect_answers[i]);
+    }
+    const correct_answer = JSON.parse(JSON.stringify(props.correct_answer));
+    console.log("correct_answer",correct_answer);
+    Answers.value.splice(AnswerIndex.value, 0, correct_answer);
   }
-  Answers.splice(AnswerIndex, 0, props.correct_answer);
+  
+  onMounted(shuffleAnswers)
 
+  onBeforeUpdate(shuffleAnswers);
+  
 </script>
-
-<style scoped>
-h2 {
-  color: royalblue;
-}
-td {
-    text-align: left;
-    padding: 5px 10px;
-}
-</style>
 
 <template>
   <div>
-    {{props.type}}
-    {{Answers}}
-     {{AnswerIndex}}
-
-     <div v-if="props.type=='multiple'">
-       <h2>The is the QuestionView</h2>
-      <h2>{{question}}</h2>
+    <h2 v-html="question"></h2>
+    <div v-if="props.type=='multiple'">
       <ol> 
         <li v-for="(answer, i) in Answers" :key="i" >
-          <button type="button" > {{ answer }}</button><br><br>
-      </li>
+          <button type="button" @click="onSubmit(answer)" v-html="answer"></button><br><br>
+        </li>
       </ol>
     </div>
 
     <div v-if="props.type=='boolean'">
-      <h2>The is the QuestionView</h2>
-      <h2>{{question}}</h2>
-          <button type="button">True</button><br><br>
-          <button type="button">False</button><br><br>
+      <button type="button" @click="onSubmit('true')">True</button><br><br>
+      <button type="button" @click="onSubmit('false')">False</button><br><br>
     </div>
 
-    <table>
+    <table v-if="props.type=='result'">
       <tbody>
         <tr>
           <td>Question {{ id }}:</td>
           <td v-html="question"></td>
-          <!-- <td>{{ question }}</td> -->
         </tr>
         <tr>
           <td>Difficulty:</td>
@@ -115,3 +122,13 @@ td {
 
   
 </template>
+
+<style scoped>
+h2 {
+  color: royalblue;
+}
+td {
+    text-align: left;
+    padding: 5px 10px;
+}
+</style>

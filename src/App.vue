@@ -6,15 +6,15 @@
   import ResultView from "./components/ResultView.vue"
 
   import {reactive, onBeforeMount, ref, computed} from 'vue'
-import QuestionItem from "./components/QuestionItem.vue";
 
   const isVisibleStart = ref(true)
   const isVisibleQuestion = ref(false)
   const isVisibleResult = ref(false)
 
   const questions = reactive([]);
-  const onStartGame = (arg) => { 
+  const currentQuestionID = ref(0);
 
+  const onStartGame = (arg) => { 
     console.log("entered OnStartGame");
     isVisibleStart.value = false;
     isVisibleQuestion.value = true;
@@ -30,17 +30,31 @@ import QuestionItem from "./components/QuestionItem.vue";
       fetch(url)
       .then(response => response.json())
       .then(result => { 
-        for (const iterator of result.results) {
-          questions.push(iterator);
+        //for (const iterator of result.results) {
+        for (let index = 0; index < result.results.length; index++) {
+          result.results[index].Id = index + 1;
+          questions.push(result.results[index]);
         }
       })
   }
 
+ const OnNextQuestion = (previousQuestion) => {
+    console.log("previousQuestion", previousQuestion);
+    if(previousQuestion.Id == questions.length) {
+      //---   reached last question
+      console.log("questions",questions);
+      //---   call resultview
+
+    }
+    else {
+      //---   set value for given_answer in previousQuestion to the
+      //      accordant element in questions array
+      questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
+      currentQuestionID.value += 1;
+    }
+  }
+
 /////////////////////////calculate score
-  // const question = {"category":"Entertainment: Video Games","type":"multiple","difficulty":"easy",
-  // "question":"What is the name of the main healing item in Dark Souls?","correct_answer":"Estus Flask",
-  // "incorrect_answers":["Health Potion","Orange Juice","Ashen Flask"]} given_answer:
- 
 
   ///////////////////////Fetch user and update highscore
   const updateScore = () => { 
@@ -88,8 +102,12 @@ import QuestionItem from "./components/QuestionItem.vue";
   <div>
 
     <StartView v-if="isVisibleStart" @start-game="onStartGame" />
-    <QuestionView v-if="isVisibleQuestion" :question="question"  />
+    <QuestionView v-if="isVisibleQuestion" 
+      :question="questions[currentQuestionID]" 
+      @next-question="OnNextQuestion" />
+   
     <ResultView v-if="isVisibleResult"  @HighScore="updateScore"/>
+
 
   </div>
 </template>
