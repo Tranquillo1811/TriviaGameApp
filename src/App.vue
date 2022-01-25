@@ -8,18 +8,23 @@
 
   import {reactive, onBeforeMount, ref, computed} from 'vue'
 
-  const isVisibleStart = ref(true)
-  const isVisibleQuestion = ref(false)
-  const isVisibleResult = ref(false)
+  const isVisibleStart = ref(true);
+  const isVisibleQuestion = ref(false);
+  const isVisibleResult = ref(false);
+
+
 
   const questions = reactive([]);
+  const history = reactive([]);
   const currentQuestionID = ref(0);
 
   const onStartGame = (arg) => { 
     console.log("entered OnStartGame");
+    
     isVisibleStart.value = false;
     isVisibleQuestion.value = true;
     isVisibleResult.value = false;
+
     let url = `https://opentdb.com/api.php?amount=${arg.qnumber}`;
       if(arg.categoryId != "") {
         url += `&category=${arg.categoryId}`;
@@ -35,6 +40,7 @@
         for (let index = 0; index < result.results.length; index++) {
           result.results[index].Id = index + 1;
           questions.push(result.results[index]);
+          history.push(result.results[index])
         }
       })
       .then(store.commit("setQuestions",questions))
@@ -57,51 +63,13 @@
       currentQuestionID.value += 1;
     }
   }
+const onReset = (start, question, result) => { 
+    
+    isVisibleStart.value = start;
+    isVisibleQuestion.value = question;
+    isVisibleResult.value = result;
 
-/////////////////////////calculate score
-
-  ///////////////////////Fetch user and update highscore
-  const updateScore = () => { 
-    const newScore = computed(() => store.state.newScore).value;
-    const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
-    const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
-    const username = computed(() => store.state.userName);
-    console.log(username.value)
-   fetch(`${apiURL}trivia?username=${username.value}`)
-      .then(response => response.json())
-      .then(response => {
-          console.log(response)
-          if (response[0].highScore < newScore){
-              
-              fetch(`${apiURL}trivia/${response[0].id}`, {
-                    method: 'PATCH', // NB: Set method to PATCH
-                    headers: {
-                    'X-API-Key': apiKey,
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      // Provide new highScore to add to user with id 1
-                      highScore: newScore  
-                    })
-              })
-              .then(response => {
-                   if (!response.ok) {
-                       throw new Error('Could not update high score')
-                    }
-                   return response.json()
-                   })
-              .then(updatedUser => {
-                 // updatedUser is the user with the Patched data
-                 console.log("New Highscore")
-              })
-              .catch(error => {
-              })
-          }else{
-            console.log("Your score is "+newScore)
-          }
-    })
-  }
-
+}  
 </script>
 
 
@@ -113,7 +81,7 @@
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
    
-    <ResultView v-if="isVisibleResult" />
+    <ResultView v-if="isVisibleResult" @reset="onReset" />
 
 
   </div>
