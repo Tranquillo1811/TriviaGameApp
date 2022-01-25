@@ -45,11 +45,13 @@
     if(previousQuestion.Id == questions.length) {
       //---   reached last question
       console.log("questions",questions);
+      //---   call resultview
+
     }
     else {
       //---   set value for given_answer in previousQuestion to the
       //      accordant element in questions array
-      questions[previousQuestion.Id].given_answer = previousQuestion.given_answer;
+      questions[previousQuestion.Id - 1].given_answer = previousQuestion.given_answer;
       currentQuestionID.value += 1;
     }
   }
