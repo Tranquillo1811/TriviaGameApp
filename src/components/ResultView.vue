@@ -31,7 +31,7 @@
         score.value.push(0)
       }
     } 
-     emit('HighScore', newScore.value)
+     emit('HighScore', newScore.value )
   }
   calcScore();
   

@@ -4,6 +4,7 @@
   import StartView from "./components/StartView.vue"
   import QuestionView from "./components/QuestionView.vue"
   import ResultView from "./components/ResultView.vue"
+  import store from "./store";
 
   import {reactive, onBeforeMount, ref, computed} from 'vue'
 
@@ -60,7 +61,9 @@
 
   ///////////////////////Fetch user and update highscore
   const updateScore = () => { 
-    
+    const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
+    const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
+    const username = computed(() => store.state.userName);
     console.log(username.value)
    fetch(`${apiURL}trivia?username=${username.value}`)
       .then(response => response.json())

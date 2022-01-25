@@ -1,5 +1,6 @@
 <script setup>
-  import {reactive, ref} from 'vue';
+  import { reactive, ref, computed } from 'vue';
+  import { useStore } from 'vuex';
   
   const difficulties = ["easy", "medium", "hard"];
   const selectedDifficulty = ref("");
@@ -9,15 +10,16 @@
   const Qnumber = ref(10)
 
   const emit = defineEmits(["start-game"]);
-
+  const store = useStore();
 
 const onSubmit = () => {
 
   //////////////////////////////////username validation
   if (username.value==''){
     alert("Write a username")
-
   }else{
+    //--- write the username to the store
+    store.commit("setUserName", username.value); 
    //------     This is Michel's part     ----- 
         console.log(username.value)
         const apiURL = 'https://ms-oh-trivia-api.herokuapp.com/'
