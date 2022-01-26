@@ -1,6 +1,6 @@
 <script setup>
   import { ref, computed } from "vue";
-  import { useStore } from "vuex";
+  import { useStore } from 'vuex'; 
   
   const store = useStore();
   //--- access to questions array in store (containing the questions picked up by the API)
@@ -67,7 +67,7 @@
     })
   }
 updateScore()
-const highScore = computed(() => store.state.highScore);
+const highScore = computed(() => store.state.highScore) ;
 
 //---   used to signal a new game start by changing visibilty of different components
 const emit = defineEmits(["reset"]);
@@ -80,12 +80,12 @@ const reset = () => {
   <div>
     <h2>Let's see what you achieved...</h2>    
     <h3>Your total score is {{ newScore }} </h3>
-    <h3>Your high-score is {{highScore}}</h3>
+    <h3>Your high-score is {{ highScore }}</h3>
     <ol>
     <li v-for="question in questions" :key="question.Id" >
         <tr v-html="question.question"></tr>
-        <tr>Your answer: {{ question.given_answer }}</tr>
-        <tr>Correct answer: {{ question.correct_answer }}</tr>
+        <tr>Your answer: <span v-html="question.given_answer"></span></tr>
+        <tr>Correct answer: <span v-html="question.correct_answer"></span></tr>
         <tr>Score gained: {{ score[question.Id - 1] }}</tr>
         <br><br>
     </li>
