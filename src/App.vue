@@ -5,7 +5,7 @@
   import QuestionView from "./components/QuestionView.vue"
   import ResultView from "./components/ResultView.vue"
   import store from "./store";
-  import {reactive, onBeforeMount, ref, computed} from 'vue'
+  import {reactive, ref} from 'vue'
 
   //--- control the visibilty of the respective views (components)
   const isVisibleStart = ref(true);
