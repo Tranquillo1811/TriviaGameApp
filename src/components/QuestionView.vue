@@ -33,7 +33,6 @@
     :question="props.question.question" 
     :incorrect_answers="question.incorrect_answers" 
     :correct_answer="question.correct_answer" 
-    show_correct_answer="false"
     @question-answered="OnQuestionAnswered">
   </QuestionItemVue>
 

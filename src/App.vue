@@ -107,7 +107,7 @@ const onReset = (start, question, result) => {
   <div>
 
     <StartView v-show="isVisibleStart" @start-game="onStartGame" />
-    <QuestionView v-if="isVisibleQuestion" 
+    <QuestionView v-if="questions[currentQuestionID] != undefined && isVisibleQuestion" 
       :question="questions[currentQuestionID]" 
       @next-question="OnNextQuestion" />
     <ResultView v-if="isVisibleResult" @reset="onReset" />
