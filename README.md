@@ -8,6 +8,8 @@ The trivia gaming app is a very simple question / answer game developed with Vue
 `npm install`
 
 `npm install @vue/cli`
+
+`npm install vuex@4`
  
 VSCode (recommended)
 
