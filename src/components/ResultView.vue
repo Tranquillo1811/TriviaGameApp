@@ -30,14 +30,15 @@
     const apiKey = 'hezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge67zshhezgdhzet5jkiuztge'
     const username = computed(() => store.state.userName);
     const newScore1 = computed(() => store.state.newScore).value;
-    console.log(username.value)
-   fetch(`${apiURL}trivia?username=${username.value}`)
+    console.log("username.value:",username.value);
+    console.log("newScore1:",newScore1);
+    fetch(`${apiURL}trivia?username=${username.value}`)
       .then(response => response.json())
-      .then(response => {
-          console.log("update score "+response)
-          if (response[0].highScore < newScore1){
+      .then(result => {
+          console.log("json username:"+ result)
+          if (result[0].highScore < newScore1){
               
-              fetch(`${apiURL}trivia/${response[0].id}`, {
+              fetch(`${apiURL}trivia/${result[0].id}`, {
                     method: 'PATCH', // NB: Set method to PATCH
                     headers: {
                     'X-API-Key': apiKey,

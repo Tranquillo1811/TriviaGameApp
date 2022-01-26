@@ -32,11 +32,12 @@
     //---   fetch user, if doesnt exist create a new one
     fetch(`${apiURL}trivia?username=${username.value}`)
     .then(response => response.json())  
-    .then(response => {
-      if (!(Object.keys(response).length===0)) {
+    .then(result => {
+      console.log("retrieved result: ",result);
+      if (!(Object.keys(result).length===0)) {
         //---   if no highscore exists for existing user create one
-        if(response[0].highScore==null) {
-          fetch(`${apiURL}trivia/${response[0].id}`, {
+        if(result[0].highScore==null) {
+          fetch(`${apiURL}trivia/${result[0].id}`, {
             method: 'PATCH', // NB: Set method to PATCH
             headers: {
              'X-API-Key': apiKey,
@@ -48,7 +49,10 @@
             })
           })
         }
-        
+        else {
+          //--- existent highScore must be stored in the state store
+          store.commit("setHighScore", result[0].highScore);
+        }
       } 
       else {   //---   user does not exist in DB so far
         //---   creating new user
