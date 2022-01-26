@@ -1,8 +1,6 @@
 <!-- represents the user view for a question -->
 
 <script setup>
-  import {reactive, ref} from 'vue'
-  import App from '../App.vue'
   import QuestionItemVue from './QuestionItem.vue';
 
   //--- this event is subscribed to in component app.vue and signals the user has answered the current question
