@@ -56,14 +56,15 @@
       fetch(url)
       .then(response => response.json())
       .then(result => { 
+        if (result.results.length!=0){
         //--- push retrieved questions to questions array
         for (let index = 0; index < result.results.length; index++) {
           result.results[index].Id = index + 1;
           questions.push(result.results[index]);
         }
-        //////////////If no more questions reset token
-        if (Object.keys(response).length===0){
-          alert("No more questions!")
+        //--- If no more questions reset token
+        }else{
+          alert("Not enough questions!")
           let url2=`https://opentdb.com/api_token.php?command=reset&token=${sessionToken.value}`
           fetch(url2)
           .then(response => response.json())
